@@ -1,24 +1,2 @@
-# admin
-
-## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+//后台
+若需要配置后台接口统一域名端口或请求成功失败操作请在 src/utils/axios.config.js中修改
