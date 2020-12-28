@@ -1,6 +1,8 @@
 import Vue from "vue";
 import App from "./App.vue";
-import router from "./router";
+// import router from "./router";
+//使用路由守卫
+import router from './router/permission.js'
 //导入ElementUI
 import ElementUI from 'element-ui'
 import "element-ui/lib/theme-chalk/index.css"

@@ -5,14 +5,16 @@ import router from '../router'
 
 //设置接口默认地址
 axios.defaults.baseURL = "http://localhost:3000";
-//拦截器  判定token是否过期
+//拦截器  判定token是否过期并将token加在请求头上
 axios.interceptors.request.use(
 	function(config) {
 		// console.log(config);
 		//获取存储的token
 		const token = window.localStorage.getItem('user-token');
-		//token 放在专有的头信息中 Authorization
-		config.headers.Authorization = `Bearer ${token}`;
+		if(token){
+			//token 放在专有的头信息中 Authorization
+			config.headers.Authorization = `Bearer ${token}`;
+		}
 		//必须有return 
 		//cors 跨域 处理复杂请求  会发送两次一次用来确认服务器是否允许请求 一次传输
 		return config
@@ -22,7 +24,6 @@ axios.interceptors.request.use(
 	})
 //拦截响应
 axios.interceptors.response.use(
-	//拦截相应没有反应到home
 	function(succresponse) {
 		// console.log(succresponse.data, 'axios-response');
 		//console.log(succresponse.status);
@@ -36,6 +37,7 @@ axios.interceptors.response.use(
 				break;
 			case 202:
 				message = "注销成功！";
+				window.localStorage.removeItem('user-token');
 				break;
 		}
 		if (succresponseStatus != 200 && !Object.is(succresponseStatus, NaN)) {
@@ -44,11 +46,10 @@ axios.interceptors.response.use(
 				message: message
 			})
 		}
-
 		return succresponse.data ? succresponse.data : {};
 	},
 	function(error) {
-		// console.log(error,'axios-error');
+		console.log(error,'axios-error');
 		//获取http状态码
 		const status = error.response.status ? error.response.status : 401;
 		let message = '';
@@ -69,8 +70,24 @@ axios.interceptors.response.use(
 					router.go(0);
 				}, 1500)
 				break;
+			case 415:
+				//console.log(error.response.data.message); 
+				message = '密码错误，请重新登陆';
+				setTimeout(() => {
+					router.go(0);
+				}, 1500)
+				break;
+			case 416:
+				message = '用户名不存在，请重新登陆';
+				setTimeout(() => {
+					router.go(0);
+				}, 1500)
+				break;
 			default:
 				message = error.response.data.message;
+				setTimeout(() => {
+					router.go(0);
+				}, 1500)
 				break;
 		}
 		//弹窗警告

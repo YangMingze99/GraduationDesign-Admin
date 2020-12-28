@@ -2,7 +2,7 @@
 	<div>
 		<el-container>
 			<el-header height="60px" class='header'>
-				<adminHeader :username="username"></adminHeader>
+				<adminHeader ></adminHeader>
 			</el-header>
 			<el-container>
 				<el-aside width="220px" class='side'>
@@ -32,16 +32,6 @@
 			adminHeader
 		},
 		created() {
-			this.$axios({
-				url:'/home/getname',
-				method:'get'
-			}).then((result)=>{
-				if(result){
-					this.username = result.data.username ;
-				}
-			}).catch((error)=>{
-				
-			})
 		}
 	};
 </script>
