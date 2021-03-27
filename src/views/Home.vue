@@ -43,8 +43,8 @@
 
 	.side {
 		border-right: 1px solid #ccc;
-		min-height: 80vh;
-		height: 700vh;
+		// min-height: 80vh;
+		height: 100vh;
 
 	}
 </style>

@@ -32,8 +32,8 @@ router.beforeEach(async(to,from,next)=>{
                 try {
                     const token = window.localStorage.getItem('user-token');
                     eventBus.$data.userInfo = await getUserInfo(token);
-                    console.log(eventBus.$data.userInfo);
-                    next()
+                    // console.log(eventBus.$data.userInfo);
+                    next();
                 } catch (error) {
                     window.localStorage.removeItem('user-token')
                     //发生错误 回去重新登陆

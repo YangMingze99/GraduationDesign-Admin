@@ -19,11 +19,19 @@ const routes = [{
 		name: "Home",
 		meta: {title : "主页"},
 		component: () => import("@/views/Home.vue"),
-		children: [{
-			path: 'index',
-			name: 'Index',
-			component: () => import("@/views/index.vue")
-		}]
+		redirect:"/home/index",
+		children: [
+			{
+				path: 'index',
+				name: '首页',
+				component: () => import("@/views/index.vue")
+			},
+			{
+			path: 'addUser',
+			name: '新建用户',
+			component: () => import("@/views/addUser.vue")
+			}
+	]
 	}
 ];
 

@@ -4,7 +4,7 @@
 			<h2 style="color: white">{{ headertitle }}</h2>
 		</div>
 		<div class="headerRight">
-			<el-avatar class="avatar" :size="35" :src="squareUrl"> </el-avatar>
+			<el-avatar class="avatar" :size="35" :src="imgUrl"> </el-avatar>
 			<el-tag effect="dark" style="margin-left: -33px">当前用户：{{ username }}
 			</el-tag>
 			<el-button type="danger" class="logoutBtn" style="padding: 10px" icon="el-icon-switch-button" round @click="logout">注销</el-button>
@@ -14,6 +14,7 @@
 
 <script>
 	import eventBus from "../utils/eventBus.js";
+	import axios from '../utils/axios.config'
 	export default {
 		name: "adminHeader",
 		data() {
@@ -26,15 +27,14 @@
 			};
 		},
 		created() {
-			this.username = eventBus.$data.userInfo.data[0].username;
-			this.imgUrl = eventBus.$data.userInfo.data[0].avatar;
-			//eventBus.$data.userInfo.data[0].last_modelfied_time 转换当前时区日期
-			this.time = new Date(
-				eventBus.$data.userInfo.data[0].last_modelfied_time
-			).toLocaleString();
-			// console.log(this.imgUrl);
+			this.setData()
 		},
 		methods: {
+			setData(){
+				this.username = eventBus.$data.userInfo.data[0].username;
+				this.imgUrl = axios.defaults.baseURL+eventBus.$data.userInfo.data[0].avatar;
+				this.time = new Date(eventBus.$data.userInfo.data[0].last_modelfied_time).toLocaleString();
+			},
 			logout() {
 				this.$axios({
 					url: "/login/logout",
@@ -44,9 +44,10 @@
 						name: "loginview",
 						path: "/login",
 					});
+					this.$router.go(0)
 				});
 			},
-		},
+		}
 	};
 </script>
 
