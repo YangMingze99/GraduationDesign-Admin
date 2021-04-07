@@ -8,7 +8,7 @@
 				<el-aside width="220px" class='side'>
 					<sidebar></sidebar>
 				</el-aside>
-				<el-main>
+				<el-main style="background-color:#eee">
 					<router-view/>
 				</el-main>
 			</el-container>

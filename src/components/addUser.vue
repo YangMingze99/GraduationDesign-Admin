@@ -1,7 +1,7 @@
 <template>
 	<div class="container">
 		<span>新增用户</span>
-    	<el-divider></el-divider>
+		<el-divider></el-divider>
 		<el-form :model="ruleForm" status-icon :rules="addUserRules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
 			<el-form-item label="用户名" prop="username">
 				<el-input v-model="ruleForm.username" autocomplete="off"></el-input>
@@ -11,8 +11,8 @@
 			</el-form-item>
 			<el-form-item label="性别" prop="gender">
 				<el-radio-group v-model="ruleForm.gender">
-					<el-radio label="1" >男</el-radio>
-					<el-radio label="0" >女</el-radio>
+					<el-radio label="1">男</el-radio>
+					<el-radio label="0">女</el-radio>
 				</el-radio-group>
 			</el-form-item>
 			<el-form-item label="密码" prop="password">
@@ -28,15 +28,9 @@
 				<el-input type="textarea" v-model="ruleForm.introduce"></el-input>
 			</el-form-item>
 			<el-form-item label="用户头像" v-model="ruleForm.imageUrl">
-				<el-upload 
-                    name="usericon"
-					class="avatar-uploader" 
-					action="http://localhost:3000/home/uploadImagePreview"
-					:show-file-list="false" 
-					:on-change="handleAvatarChange"
-					:on-success="handleAvatarSuccess"
-				>
-					<img v-if="ruleForm.imageUrl" :src="''+imageUrl" class="avatar">
+				<el-upload name="usericon" class="avatar-uploader" action="http://localhost:3000/home/uploadImagePreview"
+				 :show-file-list="false" :on-change="handleAvatarChange" :on-success="handleAvatarSuccess">
+					<img v-if="ruleForm.imageUrl" :src="'' + imageUrl" class="avatar" />
 					<i v-else class="el-icon-plus avatar-uploader-icon"></i>
 				</el-upload>
 			</el-form-item>
@@ -53,7 +47,7 @@
 		margin: 20px auto;
 	}
 
-	.avatar-uploader{
+	.avatar-uploader {
 		width: 300px;
 		border: 1px dashed #d9d9d9;
 		border-radius: 6px;
@@ -62,13 +56,14 @@
 		overflow: hidden;
 		display: flex;
 		justify-content: center;
-		.el-upload{
+
+		.el-upload {
 			width: 100%;
 		}
 	}
 
 	.avatar-uploader:hover {
-		border-color: #409EFF;
+		border-color: #409eff;
 	}
 
 	.avatar-uploader-icon {
@@ -87,102 +82,105 @@
 	}
 </style>
 <script>
-	import axios from '../utils/axios.config'
-	import manageUserApi from '../api/manageUserApi.js'
+	import axios from "../utils/axios.config";
+	import manageUserApi from "../api/manageUserApi.js";
 	export default {
 		data() {
 			let checkAge = (rule, value, callback) => {
 				if (!value) {
-					return callback(new Error('年龄不能为空'));
+					return callback(new Error("年龄不能为空"));
 				}
 				setTimeout(() => {
 					if (!Number.isInteger(value)) {
-						callback(new Error('请输入数字值'));
+						callback(new Error("请输入数字值"));
 					} else {
 						callback();
 					}
 				}, 1000);
 			};
 			let validatePass = (rule, value, callback) => {
-				if (value === '') {
-					callback(new Error('请输入密码'));
+				if (value === "") {
+					callback(new Error("请输入密码"));
 				} else {
-					if (this.ruleForm.checkPassword !== '') {
-						this.$refs.ruleForm.validateField('checkPassword');
+					if (this.ruleForm.checkPassword !== "") {
+						this.$refs.ruleForm.validateField("checkPassword");
 					}
 					callback();
 				}
 			};
 			let validatePass2 = (rule, value, callback) => {
-				if (value === '') {
-					callback(new Error('请再次输入密码'));
+				if (value === "") {
+					callback(new Error("请再次输入密码"));
 				} else if (value !== this.ruleForm.password) {
-					callback(new Error('两次输入密码不一致!'));
+					callback(new Error("两次输入密码不一致!"));
 				} else {
 					callback();
 				}
 			};
 			return {
-				imageUrl:'',
+				imageUrl: "",
 				ruleForm: {
-					username: '',
-					nickname: '',
-					gender: '',
-					password: '',
-					checkPassword: '',
-					age: '',
-					introduce: '',
-					imageUrl: ''
+					username: "",
+					nickname: "",
+					gender: "",
+					password: "",
+					checkPassword: "",
+					age: "",
+					introduce: "",
+					imageUrl: "",
 				},
 				addUserRules: {
 					password: [{
 						validator: validatePass,
-						trigger: 'blur'
-					}],
+						trigger: "blur",
+					}, ],
 					checkPassword: [{
 						validator: validatePass2,
-						trigger: 'blur'
-					}],
+						trigger: "blur",
+					}, ],
 					username: [{
 						required: true,
-						message: '请输入用户名',
-						trigger: 'blur'
-					}],
+						message: "请输入用户名",
+						trigger: "blur",
+					}, ],
 					nickname: [{
 						required: true,
-						message: '请输入用户昵称',
-						trigger: 'blur'
-					}],
+						message: "请输入用户昵称",
+						trigger: "blur",
+					}, ],
 					gender: [{
 						required: true,
-						message: '请选择性别',
-						trigger: 'change'
-					}],
+						message: "请选择性别",
+						trigger: "change",
+					}, ],
 					age: [{
 						validator: checkAge,
-						trigger: 'blur'
-					}]
-				}
-			}
+						trigger: "blur",
+					}, ],
+				},
+			};
 		},
 		methods: {
-			handleAvatarSuccess(response, file, fileList){
-				this.imageUrl = axios.defaults.baseURL+'/images_temp/'+response
-				this.ruleForm.imageUrl = response
+			handleAvatarSuccess(response, file, fileList) {
+				this.imageUrl = axios.defaults.baseURL + "/images_temp/" + response;
+				this.ruleForm.imageUrl = response;
 			},
-			handleAvatarChange(res, file) {
-				
-			},
+			handleAvatarChange(res, file) {},
 			submitForm(formName) {
-				let _this = this
+				let _this = this;
 				this.$refs[formName].validate((valid) => {
 					if (valid) {
 						manageUserApi.addNewUser(_this.ruleForm).then((result) => {
-							
-						}).catch((err) => {
-							
-						});
-
+								if (result.code == 666) {
+									this.$alert("添加成功！", "操作结果", {
+										confirmButtonText: "确定",
+										callback: (action) => {
+											this.resetForm('ruleForm');
+										},
+									});
+								}
+							})
+							.catch((err) => {});
 					} else {
 						// console.log('error submit!!');
 						return false;
@@ -190,9 +188,9 @@
 				});
 			},
 			resetForm(formName) {
-				this.ruleForm.imageUrl = ''
+				this.ruleForm.imageUrl = "";
 				this.$refs[formName].resetFields();
-			}
-		}
-	}
+			},
+		},
+	};
 </script>

@@ -24,12 +24,17 @@ const routes = [{
 			{
 				path: 'index',
 				name: '首页',
-				component: () => import("@/views/index.vue")
+				component: () => import("@/components/index.vue")
 			},
 			{
-			path: 'addUser',
-			name: '新建用户',
-			component: () => import("@/views/addUser.vue")
+				path: 'addUser',
+				name: '新建用户',
+				component: () => import("@/components/addUser.vue")
+			},
+			{
+				path: 'editUser',
+				name: '管理用户',
+				component: () => import("@/components/manageUser.vue")
 			}
 	]
 	}

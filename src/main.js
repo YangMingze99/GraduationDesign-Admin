@@ -16,6 +16,7 @@ Vue.config.productionTip = false;
 //使用组件 全局注册
 Vue.use(ElementUI)
 
+
 new Vue({
   router,
   render: h => h(App)
