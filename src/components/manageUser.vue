@@ -36,8 +36,46 @@
 			</el-table-column>
 			<el-table-column label="操作">
 				<template slot-scope="scope">
-					<el-button size="mini" @click="handleEdit(scope.row._id, scope.row)">编辑</el-button>
-					<el-button size="mini" v-if="scope.row.username!='admin'	" type="danger" @click="handleDelete(scope.row._id, scope.row)">删除</el-button>
+					<el-button size="mini" v-if="currentUser == 'admin' || scope.row.username == currentUser" @click="handleEdit(scope.row._id, scope.row)">编辑</el-button>
+					<!-- 修改表单 -->
+					<el-dialog title="修改用户信息" :visible.sync="editDialogFormVisible">
+						<el-form :model="editFormData">
+							<el-form-item label="用户id" :label-width="formLabelWidth">
+								<el-input v-model="editFormData._id" autocomplete="off" disabled></el-input>
+							</el-form-item>
+							<el-form-item label="用户名" :label-width="formLabelWidth">
+								<el-input v-model="editFormData.username" autocomplete="off"></el-input>
+							</el-form-item>
+							<el-form-item label="用户昵称" :label-width="formLabelWidth">
+								<el-input v-model="editFormData.nickname" autocomplete="off"></el-input>
+							</el-form-item>
+							<el-form-item label="性别" :label-width="formLabelWidth">
+								<el-select v-model="editFormData.gender">
+									<el-option label="女" value="0"></el-option>
+									<el-option label="男" value="1"></el-option>
+								</el-select>
+							</el-form-item>
+							<el-form-item label="用户年龄" :label-width="formLabelWidth">
+								<el-input v-model="editFormData.age" autocomplete="off"></el-input>
+							</el-form-item>
+							<el-form-item label="用户介绍" :label-width="formLabelWidth">
+								<el-input type="textarea" v-model="editFormData.introduce" autocomplete="off"></el-input>
+							</el-form-item>
+							<el-form-item label="用户头像" :label-width="formLabelWidth" v-model="editFormData.avatar">
+								<el-upload name="usericon" class="avatar-uploader" action="http://localhost:3000/home/uploadImagePreview"
+								 :show-file-list="false" :on-success="handleAvatarSuccess">
+									<img :src="axiosUrl+editFormData.avatar" alt="" width="100" height="100" style="border-radius:10px ;" />
+								</el-upload>
+							</el-form-item>
+						</el-form>
+						<div slot="footer" class="dialog-footer">
+							<el-button @click="editDialogFormVisible = false">取 消</el-button>
+							<el-button type="primary" @click="editDialogFormVisible = false">确 定</el-button>
+						</div>
+					</el-dialog>
+					<!-- 修改表单结束 -->
+					<el-button size="mini" style="margin-left:10px" v-if="currentUser=='admin' && scope.row.username != 'admin'" type="danger"
+					 @click="handleDelete(scope.row._id, scope.row)">删除</el-button>
 				</template>
 			</el-table-column>
 		</el-table>
@@ -62,11 +100,17 @@
 <script>
 	import axios from "../utils/axios.config";
 	import manageUserApi from "../api/manageUserApi.js";
+	import eventBus from '../utils/eventBus.js'
+
 	export default {
 		data() {
 			return {
 				tableData: [],
-				axiosUrl: axios.defaults.baseURL
+				axiosUrl: axios.defaults.baseURL,
+				editDialogFormVisible: false,
+				currentUser: eventBus.$data.userInfo.data[0].username,
+				editFormData: {},
+				formLabelWidth: '100px'
 			};
 		},
 		methods: {
@@ -87,6 +131,10 @@
 					t.getSeconds()
 				);
 			},
+			handleAvatarSuccess(response, file, fileList) {
+				this.imageUrl = axios.defaults.baseURL + "/images_temp/" + response;
+				this.ruleForm.imageUrl = response;
+			},
 			getAllUsers() {
 				manageUserApi
 					.getAllUser()
@@ -95,8 +143,14 @@
 					})
 					.catch((err) => {});
 			},
-			handleEdit(index, row) {
+			handleEdit(id, row) {
+				this.editDialogFormVisible = true;
+				manageUserApi.getUserById(id).then((result) => {
+					this.editFormData = result.data;
+					this.editFormData.gender = this.editFormData.gender+''
+				}).catch((err) => {
 
+				});
 			},
 			handleDelete(id, row) {
 				// console.log(id,'id');

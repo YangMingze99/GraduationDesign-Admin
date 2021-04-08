@@ -14,7 +14,11 @@ const manageUser = {
         return axios.post('/home/deleteUser', {
             id: id
         })
+    },
+    getUserById(id){
+        return axios.get('/home/getUserById',{params:{id}})
     }
+
 
 }
 export default manageUser
