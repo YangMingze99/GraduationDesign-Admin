@@ -17,6 +17,7 @@
 	import axios from '../utils/axios.config'
 	export default {
 		name: "adminHeader",
+		inject:['reload'],
 		data() {
 			return {
 				headertitle: "计算机学院网站后台管理系统",

@@ -17,6 +17,11 @@ const manageUser = {
     },
     getUserById(id){
         return axios.get('/home/getUserById',{params:{id}})
+    },
+    editUser(formData){
+        return axios.post('/home/editUser',{
+            formData:formData,
+        })
     }
 
 

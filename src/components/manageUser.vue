@@ -36,10 +36,10 @@
 			</el-table-column>
 			<el-table-column label="操作">
 				<template slot-scope="scope">
-					<el-button size="mini" v-if="currentUser == 'admin' || scope.row.username == currentUser" @click="handleEdit(scope.row._id, scope.row)">编辑</el-button>
+					<el-button size="mini" v-if="currentUser == 'admin' || scope.row.username == currentUser" @click="handleEditClick(scope.row._id, scope.row)">编辑</el-button>
 					<!-- 修改表单 -->
 					<el-dialog title="修改用户信息" :visible.sync="editDialogFormVisible">
-						<el-form :model="editFormData">
+						<el-form :model="editFormData" ref="editForm">
 							<el-form-item label="用户id" :label-width="formLabelWidth">
 								<el-input v-model="editFormData._id" autocomplete="off" disabled></el-input>
 							</el-form-item>
@@ -70,7 +70,7 @@
 						</el-form>
 						<div slot="footer" class="dialog-footer">
 							<el-button @click="editDialogFormVisible = false">取 消</el-button>
-							<el-button type="primary" @click="editDialogFormVisible = false">确 定</el-button>
+							<el-button type="primary" @click="submitEdit()">确 定</el-button>
 						</div>
 					</el-dialog>
 					<!-- 修改表单结束 -->
@@ -100,9 +100,10 @@
 <script>
 	import axios from "../utils/axios.config";
 	import manageUserApi from "../api/manageUserApi.js";
-	import eventBus from '../utils/eventBus.js'
+	import eventBus from '../utils/eventBus.js';
 
 	export default {
+		inject:['reload'],
 		data() {
 			return {
 				tableData: [],
@@ -132,8 +133,8 @@
 				);
 			},
 			handleAvatarSuccess(response, file, fileList) {
-				this.imageUrl = axios.defaults.baseURL + "/images_temp/" + response;
-				this.ruleForm.imageUrl = response;
+				this.editFormData.avatar = "/images_temp/" +response;
+				this.editFormData.newAvatar = response;
 			},
 			getAllUsers() {
 				manageUserApi
@@ -143,24 +144,39 @@
 					})
 					.catch((err) => {});
 			},
-			handleEdit(id, row) {
+			handleEditClick(id, row) {
 				this.editDialogFormVisible = true;
 				manageUserApi.getUserById(id).then((result) => {
 					this.editFormData = result.data;
 					this.editFormData.gender = this.editFormData.gender+''
 				}).catch((err) => {
-
+					console.warn(err);
+				});
+			},
+			submitEdit(){
+				this.editDialogFormVisible = false;
+				this.editFormData.gender = parseInt(this.editFormData.gender);
+				manageUserApi.editUser(this.editFormData).then((result) => {
+					if (result.code == 666) {
+						this.$alert("修改成功！", "操作结果", {
+							confirmButtonText: "确定",
+							callback: (action) => {
+								this.reload()
+							},
+						});
+					}
+				}).catch((err) => {
+					console.warn(err);
 				});
 			},
 			handleDelete(id, row) {
-				// console.log(id,'id');
-				// console.log(row,'row');
 				manageUserApi.deleteUserById(id).then((result) => {
 					if (result.code == 666) {
 						this.$alert("删除成功！", "操作结果", {
 							confirmButtonText: "确定",
 							callback: (action) => {
-								this.$router.go(0);
+								// this.$router.go(0);
+								this.reload()
 							},
 						});
 					}

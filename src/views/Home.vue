@@ -22,6 +22,7 @@
 	import sidebar from '@/components/siderbar.vue'
 	export default {
 		name: "Home",
+		inject:['reload'],
 		data(){
 			return {
 				username:''
@@ -30,8 +31,6 @@
 		components: {
 			sidebar,
 			adminHeader
-		},
-		created() {
 		}
 	};
 </script>
