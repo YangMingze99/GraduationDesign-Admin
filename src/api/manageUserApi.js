@@ -22,6 +22,11 @@ const manageUser = {
         return axios.post('/home/editUser',{
             formData:formData,
         })
+    },
+    editPassword(formData){
+        return axios.post('/home/editPassword',{
+            formData:formData
+        })
     }
 
 

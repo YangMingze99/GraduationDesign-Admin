@@ -35,6 +35,16 @@ const routes = [{
 				path: 'editUser',
 				name: '管理用户',
 				component: () => import("@/components/manageUser.vue")
+			},
+			{
+				path: 'editPassword',
+				name: '修改登录密码',
+				component: () => import("@/components/editPassword.vue")
+			},
+			{
+				path: 'userPermissions',
+				name: '用户权限配置',
+				component: () => import("@/components/userPermissions.vue")
 			}
 	]
 	}

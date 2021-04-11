@@ -12,8 +12,9 @@
 				</template>
 				<el-menu-item-group>
 					<!-- <template slot="title">分组一</template> -->
-					<el-menu-item exact index="/home/addUser">新增用户</el-menu-item>
+					<el-menu-item  exact index="/home/addUser">新增用户</el-menu-item>
 					<el-menu-item  exact index="/home/editUser">管理用户信息</el-menu-item>
+					<el-menu-item  exact index="/home/editPassword">修改密码</el-menu-item>
 					<el-menu-item  exact index="/home/userPermissions">角色权限</el-menu-item>
 				</el-menu-item-group>
 			</el-submenu>
@@ -46,9 +47,9 @@
 	.el-menu{
 		border-right: 0px;
 	}
-	.el-menu-vertical-siderbar {
+	/* .el-menu-vertical-siderbar {
 		
-	}
+	} */
 	.el-menu-item.is-active {
 	        background-color: rgb(231, 235, 240) !important;
 	}
