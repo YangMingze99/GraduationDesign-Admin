@@ -27,6 +27,9 @@ const manageUser = {
         return axios.post('/home/editPassword',{
             formData:formData
         })
+    },
+    getAllUserRole(){
+        return axios.get('/home/getAllUserRole')
     }
 
 

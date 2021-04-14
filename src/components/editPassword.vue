@@ -82,7 +82,6 @@
                                                 path: '/login'
                                             })
                                             this.$router.go(0)
-
 										},
 									});
 								}
