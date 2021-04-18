@@ -13,6 +13,7 @@ router.beforeEach(async(to,from,next)=>{
     // console.log(to);
     // console.log(from);
     // document.title = to.meta.title;
+    
     document.title = getPageTitle(to.meta.title)
     Nprogress.start();
     const token = window.localStorage.getItem('user-token');
@@ -26,6 +27,24 @@ router.beforeEach(async(to,from,next)=>{
             //根据有没有个人信息处理
             if(hasGetUserInfo){
                 //存在个人信息继续执行
+                //判断权限
+                if(to.name === 'manageNews'){
+                    const id = to.params.id;
+                    const userRole = eventBus.$data.userInfo.data[0].role.split(',');
+                    let isPermission = userRole.findIndex((value,index)=>value == id);
+                    if(isPermission < 0){
+                        Message({
+                            type:'error',
+                            message:'该页面当前用户无权访问，请联系系统管理员处理'
+                        })
+                        next({path:from.path});
+                        Nprogress.done();
+                    }else{
+                        next();
+                    }
+                }
+                // console.log(to);
+
                 next();
             }else{
                 //不存在 向后台获取用户信息 获取中可能存在错误 使用try-catch

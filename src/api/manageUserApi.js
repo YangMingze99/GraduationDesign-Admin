@@ -30,8 +30,13 @@ const manageUser = {
     },
     getAllUserRole(){
         return axios.get('/home/getAllUserRole')
+    },
+    editUserRoleById(id,role){
+        return axios.post('/home/editUserRoleById',{
+            userid:id,
+            newrole:role
+        })
     }
-
 
 }
 export default manageUser

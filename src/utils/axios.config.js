@@ -41,10 +41,12 @@ axios.interceptors.response.use(
 				break;
 		}
 		if (succresponseStatus != 200 && !Object.is(succresponseStatus, NaN)) {
-			Message({
-				type: 'success',
-				message: message
-			})
+			if(message != ''){
+				Message({
+					type: 'success',
+					message: message
+				})
+			}
 		}
 		return succresponse.data ? succresponse.data : {};
 	},

@@ -17,23 +17,24 @@
 			</el-table-column>
 			<el-table-column label="操作">
 				<template slot-scope="scope">
-					<el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-					<el-dialog title="分配权限" :visible="dialogVisible" width="130" :show-close='false'>
-						<el-alert title="分配权限时请不要将无权限分配给有其他权限的用户,这会导致系统错误" type="error" effect="dark">
-						</el-alert>
-						<el-transfer :style="{marginLeft:60 +'px'}" v-model="userRole" :data="allRoleArr" :titles="['可分配全选', '已分配权限']"></el-transfer>
-
-						<span slot="footer" class="dialog-footer">
-							<el-button @click="dialogVisible = false">取 消</el-button>
-							<el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-						</span>
-					</el-dialog>
-
+					<el-button size="mini" v-if="scope.row.username != 'admin'" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
 				</template>
 			</el-table-column>
 		</el-table>
+		<el-dialog title="分配权限" :visible="dialogVisible" width="130" :show-close='false'>
+			<el-alert title="分配权限时请不要将无权限分配给有其他权限的用户,这会导致系统错误" type="error" effect="dark">
+			</el-alert>
+			<el-transfer :style="{marginLeft:60 +'px'}" v-model="userRole" :data="allRoleArr" :titles="['可分配全选', '已分配权限']"
+			 @change="getRoleChange">
+			</el-transfer>
 
+			<span slot="footer" class="dialog-footer">
+				<el-button @click="dialogVisible = false">取 消</el-button>
+				<el-button type="primary" @click="submitEdit">确 定</el-button>
+			</span>
+		</el-dialog>
 	</div>
+
 </template>
 <style lang="less" scoped>
 
@@ -49,6 +50,8 @@
 				tableData: [],
 				tagsData: [],
 				dialogVisible: false,
+				newUserRole: '',
+				currentUserId:null,
 				userRole: [],
 				allRoleArr: [{
 						key: '0',
@@ -111,11 +114,29 @@
 				const property = column['property'];
 				return row.role[property] === value;
 			},
+			getRoleChange(value) {
+				if (value.length == 0) value.push('0');
+				else {
+					let index = value.findIndex((val, ind) => val == '0')
+					if (index >= 0) value.splice(index, 1)
+				}
+				// console.log(value.toString());
+				this.$data.newUserRole = value.toString();
+			},
+			submitEdit() {
+				const currentUserId = this.currentUserId;
+				const newUserRole = this.newUserRole
+				manageUserApi.editUserRoleById(currentUserId,newUserRole).then((result) => {
+					this.$data.dialogVisible = false;
+					this.getAllUsers()
+				}).catch((err) => {});
+			},
 			handleClose(done) {
 				done();
 			},
 			handleEdit(index, row) {
 				const currentUserId = row._id;
+				this.currentUserId = row._id;
 				this.dialogVisible = true;
 				manageUserApi.getUserById(currentUserId).then((result) => {
 					this.userRole = result.data.role.split(',')
@@ -157,7 +178,7 @@
 			this.getAllUserRole();
 			this.getAllUsers();
 		},
-		beforeRouteUpdate (to, from, next) {
+		beforeRouteUpdate(to, from, next) {
 			this.getAllUserRole();
 			this.getAllUsers();
 		}

@@ -45,6 +45,11 @@ const routes = [{
 				path: 'userPermissions',
 				name: '用户权限配置',
 				component: () => import("@/components/userPermissions.vue")
+			},
+			{
+				path: 'manageNews/:id',
+				name: 'manageNews',
+				component: () => import("@/components/manageNews.vue")
 			}
 	]
 	}
