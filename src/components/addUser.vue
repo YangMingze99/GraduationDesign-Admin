@@ -28,8 +28,10 @@
 				<el-input type="textarea" v-model="ruleForm.introduce"></el-input>
 			</el-form-item>
 			<el-form-item label="用户头像" v-model="ruleForm.imageUrl">
-				<el-upload name="usericon" class="avatar-uploader" action="http://localhost:3000/home/uploadImagePreview"
-				 :show-file-list="false" :on-change="handleAvatarChange" :on-success="handleAvatarSuccess">
+				<el-upload name="usericon"
+				 class="avatar-uploader" action="http://localhost:3000/home/uploadImagePreview"
+				 :show-file-list="false" :on-change="handleAvatarChange" 
+				 :on-success="handleAvatarSuccess">
 					<img v-if="ruleForm.imageUrl" :src="'' + imageUrl" class="avatar" />
 					<i v-else class="el-icon-plus avatar-uploader-icon"></i>
 				</el-upload>

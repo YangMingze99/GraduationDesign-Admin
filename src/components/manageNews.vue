@@ -2,7 +2,7 @@
 	<div>
 		<div style="display:flex;justify-content: space-between;">
 			<span style="display: flex; align-items: center;">{{currentRoleInfo.modelName}}-新闻管理页</span>
-			<el-button type="primary" round>发布一条新文章吧</el-button>
+			<el-button type="primary" round @click="handle_addButtonClick">发布一条新文章吧</el-button>
 		</div>
 		<el-divider></el-divider>
 		<el-pagination 
@@ -26,7 +26,6 @@
 			<el-input  style="width:200px;position: absolute;top: 13px;right: 40px;z-index: 2;"  
 				v-model="search" size="mini" 
 				placeholder="输入标题关键字搜索" />
-			<!-- :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"  -->
 			<el-table 
 				:data="tableData.filter(data => !currentSelectOption || data.childrenId == currentSelectOption).filter(data => !search || data.newsTitle.toLowerCase().includes(search.toLowerCase())).slice((currentPage-1)*pagesize,currentPage*pagesize)" 
 				style="width: 100%">
@@ -91,13 +90,17 @@
 		},
 		methods: {
 			handleEdit(index, row) {
-				console.log(row._id,'row');
+				this.$router.push({name:'handleNewsInfo',params:{newsId:row._id,roleID:this.currentRoleInfo.modelID,NavItems:this.currentChildNavItems,type:'edit'}}) 
 			},
 			handleDelete(index, row) {
 				// console.log(index, row);
 			},
 			handle_searchInputChange(value){
 				this.$forceUpdate();
+			},
+			handle_addButtonClick(){
+				this.$router.push({name:'handleNewsInfo',params:{roleID:this.currentRoleInfo.modelID
+,NavItems:this.currentChildNavItems,type:'add'}}) 
 			},
 			size_change:function(size){
 				this.pagesize = size;

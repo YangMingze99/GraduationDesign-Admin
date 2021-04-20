@@ -11,6 +11,8 @@ import axios from "@/utils/axios.config.js"
 //导入默认样式
 import '@/assets/css/reset.css'
 
+
+
 Vue.prototype.$axios = axios;
 Vue.config.productionTip = false;
 //使用组件 全局注册

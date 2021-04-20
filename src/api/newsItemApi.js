@@ -23,7 +23,18 @@ const newsItem = {
     },
     getSwiperNewsItem(){
         return axios.get('/newsItem/getSwiperBannerNews')
-    }
+    },
+    addNewsItem(FormData) {
+        return axios.post('/home/addNewsItem',{
+            data:FormData
+        })
+    },
+    editNewsItem(FormData,id) {
+        return axios.post('/home/editNewsItem',{
+            data:FormData,
+            newsId:id
+        })
+    },
 }
 
 export default newsItem;
