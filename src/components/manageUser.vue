@@ -103,7 +103,7 @@
 	import eventBus from '../utils/eventBus.js';
 
 	export default {
-		inject:['reload'],
+		inject: ['reload'],
 		data() {
 			return {
 				tableData: [],
@@ -133,7 +133,7 @@
 				);
 			},
 			handleAvatarSuccess(response, file, fileList) {
-				this.editFormData.avatar = "/images_temp/" +response;
+				this.editFormData.avatar = "/images_temp/" + response;
 				this.editFormData.newAvatar = response;
 			},
 			getAllUsers() {
@@ -148,12 +148,12 @@
 				this.editDialogFormVisible = true;
 				manageUserApi.getUserById(id).then((result) => {
 					this.editFormData = result.data;
-					this.editFormData.gender = this.editFormData.gender+''
+					this.editFormData.gender = this.editFormData.gender + ''
 				}).catch((err) => {
 					console.warn(err);
 				});
 			},
-			submitEdit(){
+			submitEdit() {
 				this.editDialogFormVisible = false;
 				this.editFormData.gender = parseInt(this.editFormData.gender);
 				manageUserApi.editUser(this.editFormData).then((result) => {

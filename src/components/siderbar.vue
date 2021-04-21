@@ -24,6 +24,9 @@
 					<i class="el-icon-menu"></i>
 					<span>新闻管理</span>
 				</template>
+				<el-menu-item-group>
+					<el-menu-item exact v-if="username === 'admin'" index="/home/commitNews" >新闻审核</el-menu-item>
+				</el-menu-item-group>
 				<el-menu-item-group v-for="item in userRole" :key="item">
 					<el-menu-item exact v-if="item == '1'" index="/home/manageNews/1" >学院概况栏目</el-menu-item>
 					<el-menu-item exact v-if="item == '2'" index="/home/manageNews/2" >师资队伍栏目</el-menu-item>

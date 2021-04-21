@@ -24,17 +24,31 @@ const newsItem = {
     getSwiperNewsItem(){
         return axios.get('/newsItem/getSwiperBannerNews')
     },
+    getUnCheckedNewItem(){
+        return axios.get('/home/getUnCheckedNewItem')
+    },
     addNewsItem(FormData) {
         return axios.post('/home/addNewsItem',{
             data:FormData
         })
     },
-    editNewsItem(FormData,id) {
+    editNewsItem(FormData,id,isNew) {
         return axios.post('/home/editNewsItem',{
             data:FormData,
-            newsId:id
+            newsId:id,
+            newPic:isNew
         })
     },
+    commitNewsItem(id){
+        return axios.post('/home/commitNewsItem',{
+            newsId:id,
+        })
+    },
+    deleteNewItem(id){
+        return axios.post('/home/deleteNewsItem',{
+            newsId:id,
+        })
+    }
 }
 
 export default newsItem;

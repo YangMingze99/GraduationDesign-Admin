@@ -55,6 +55,11 @@ const routes = [{
 				path: 'handleNewsInfo',
 				name: 'handleNewsInfo',
 				component: () => import("@/components/handleNewsInfo.vue")
+			},
+			{
+				path: 'commitNews',
+				name: 'commitNews',
+				component: () => import("@/components/commitNews.vue")
 			}
 	]
 	}

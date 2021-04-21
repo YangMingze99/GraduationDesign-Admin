@@ -23,15 +23,15 @@
 			<el-form-item label="新闻缩略图" v-model="form.newsPictures">
 				<el-upload name="usericon" class="avatar-uploader" action="http://localhost:3000/home/uploadImagePreview"
 				 :show-file-list="false" :on-success="handleAvatarSuccess">
-				 <div v-if="pageType == 'add'">
-					<img v-if="form.newsPictures" :src="'' + imageUrl" class="avatar" />
-					<i v-else class="el-icon-plus avatar-uploader-icon"></i>
-				 </div>
-				 <div v-else>
-					<img v-if="form.newsPictures" :src="'' + imageUrl" class="avatar" />
-					<i v-else class="el-icon-plus avatar-uploader-icon"></i>
-				 </div>
-					
+					<div v-if="pageType == 'add'">
+						<img v-if="form.newsPictures" :src="'' + imageUrl" class="avatar" />
+						<i v-else class="el-icon-plus avatar-uploader-icon"></i>
+					</div>
+					<div v-else>
+						<img v-if="form.newsPictures" :src="'' + imageUrl" class="avatar" />
+						<i v-else class="el-icon-plus avatar-uploader-icon"></i>
+					</div>
+
 				</el-upload>
 			</el-form-item>
 			<el-form-item label="新闻正文">
@@ -97,7 +97,9 @@
 	import "quill/dist/quill.snow.css";
 	import "quill/dist/quill.bubble.css";
 	import Quill from "quill";
-	import {quillEditor} from "vue-quill-editor";
+	import {
+		quillEditor
+	} from "vue-quill-editor";
 	import ImageResize from 'quill-image-resize-module' //添加
 	Quill.register('modules/imageResize', ImageResize) //添加
 	//富文本编辑器相关结束
@@ -108,9 +110,10 @@
 		},
 		data() {
 			return {
-				pageType:'',
-				baseURL:'',
-				newsId:undefined,
+				isNewPic: false,
+				pageType: '',
+				baseURL: '',
+				newsId: undefined,
 				imageUrl: "",
 				routerParams: {},
 				form: {
@@ -207,7 +210,7 @@
 		},
 		created() {
 			this.getRouterParams();
-			if(this.newsId){
+			if (this.newsId) {
 				this.getNewsInfo()
 			}
 		},
@@ -242,7 +245,7 @@
 				const token = localStorage.getItem("routerParams");
 				jwt.verify(token, "SNSD", (error, decode) => {
 					if (!error) {
-						this.$data.newsId = decode.data.newsId? decode.data.newsId :undefined;
+						this.$data.newsId = decode.data.newsId ? decode.data.newsId : undefined;
 						this.$data.pageType = decode.data.type;
 						this.$data.routerParams = decode.data;
 						this.$data.form.parentId = decode.data.roleID;
@@ -250,25 +253,43 @@
 				});
 				this.$data.baseURL = axios.defaults.baseURL
 			},
-			getNewsInfo(){
+			getNewsInfo() {
 				newsItemApi.getNewsDetailByNewsId(this.newsId).then((result) => {
 					this.$data.form = result.data[0]
-					this.imageUrl = axios.defaults.baseURL+this.$data.form.newsPictures
+					this.imageUrl = axios.defaults.baseURL + this.$data.form.newsPictures
 				}).catch((err) => {});
 			},
 			handleSubmitClick() {
-				if(this.newsId){
-					console.log("修改");
-				}else{
-					newsItemApi.addNewsItem(this.form).then((result) => {
-						
+				if (this.newsId) {
+					newsItemApi.editNewsItem(this.form, this.newsId, this.isNewPic).then((result) => {
+						if (result.code == "666") {
+							this.$alert("修改成功！", "操作结果", {
+								confirmButtonText: "确定",
+								callback: (action) => {
+									this.$router.go(-1);
+									this.reload()
+								},
+							});
+						}
 					}).catch((err) => {});
-					console.log("新增");
+				} else {
+					newsItemApi.addNewsItem(this.form).then((result) => {
+						if (result.code == "666") {
+							this.$alert("发布成功！请等待审核", "操作结果", {
+								confirmButtonText: "确定",
+								callback: (action) => {
+									this.$router.go(-1);
+									this.reload()
+								},
+							});
+						}
+					}).catch((err) => {});
 				}
 			},
 			handleAvatarSuccess(response, file, fileList) {
 				this.imageUrl = axios.defaults.baseURL + "/images_temp/" + response;
 				this.form.newsPictures = response;
+				this.isNewPic = true;
 			},
 		},
 		beforeRouteEnter: (to, from, next) => {
